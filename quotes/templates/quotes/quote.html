@@ -1,0 +1,14 @@
+<!-- quotes/templates/quotes/quote.html -->
+{% extends 'quotes/base.html' %}
+        
+    {% block content %}
+        <h1>Guy Fieri Quote of the Day</h1>
+        <h2>Quote of the Date</h2>
+        <p>
+            {{ random_quote }}
+        </p>
+        <h2>Guy Fieri</h2>
+        <center>
+        <img src="{{ random_image }}" alt="Radom Guy Fieri Image" style="max-width: 300px; height: auto;">
+        </center>
+    {% endblock %}

@@ -1,0 +1,80 @@
+body {
+    background-color: #FFC0CB;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color:	#8B4513;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    color:	#8B4513;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size:larger;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin: 0 auto;
+    color:	#8B4513;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    position:fixed;
+    bottom:0px;
+}
+
+td, tr, th {
+    border: 2pt solid;
+    width: auto;
+    margin: 10pt;
+    padding: 15pt;
+    text-align: center;
+    color:	#8B4513;
+    font-size:larger;
+}
+
+table {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2pt solid;
+    border-collapse:collapse;
+    background-color: #FFDAB9;
+    border-color: #8B4513;
+}
+
+img {
+    border-radius: 25px;
+
+}
+
+div {
+    padding: 15pt;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 2pt dotted;
+    border-color: #8B4513;
+}
+
+a:link {
+    color:#8B4513;
+}
+
+a:visited {
+    color:#FF1493;
+}
+
+a:hover {
+    color:#2E8B57;
+}
+
+a:active {
+    color:#FF1493;
+}

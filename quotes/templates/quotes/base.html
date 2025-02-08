@@ -1,0 +1,29 @@
+<!-- quotes/templates/quotes/base.html -->
+
+{% load static %}
+
+<html>
+    <head>
+        <title>Guy Fieri Quote of the Day</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    </head>
+    <body>
+        <header>
+        <nav>
+            <a href="{% url 'quote' %}">Quote of the Day</a>
+            <a href="{% url 'show_all' %}">Show All</a>
+            <a href="{% url 'about' %}">About</a>
+        </nav>
+        </header>
+
+        {%  block content %}
+        {% endblock %}
+
+        <!--
+        <footer>
+            <p>Made by aschreib@bu.edu</p>
+            <p>Generated at {{time}}.</p>
+        </footer>
+        -->
+    </body>
+</html>
