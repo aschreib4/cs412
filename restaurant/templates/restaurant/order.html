@@ -1,0 +1,50 @@
+<!-- restaurant/templates/restaurant/order.html -->
+{% extends 'restaurant/base.html' %}
+        
+{% block content %}
+
+<div>
+    <h2>Online Order Form</h2>
+
+    <form action="{% url 'confirmation' %}" method="POST">
+        {% csrf_token %}
+
+        <h3>Customer Information:</h3>
+        <p>Name: <input type="text" name="name"></p>
+        <p>Phone: <input type="text" name="phone"></p>
+        <p>Email: <input type="text" name="email"></p>
+
+        <h3>Select your items below!</h3>
+        {% for item in menu_items %}
+            <p>
+                <input type="checkbox" name="order_items" value="{{ item.name }}"> {{ item.name }} - ${{ item.price }}
+            </p>
+
+            {% if item.options %}
+                <p>
+                <label for="{{ item.name }}_options">Choose options for {{ item.name }}</label>
+                <select name="{{ item.name }}_options">
+                    <option value="">None</option>
+                    {% for option in item.options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                </p>
+            {% endif %}
+
+        {% endfor %}
+
+        <h3>Select if you would like the daily special!</h3>
+        <p><input type="checkbox" name="daily_special" value="{{ daily_special.name }}">{{daily_special.name}} - ${{daily_special.price}} : {{daily_special.details}}</p>
+
+        <h3>Special Instructions?</h3>
+        <p><textarea name="special_instructions" rows="3" cols="60"></textarea></p>
+
+        <h3>Place your order below!</h3>
+        <p><input type="submit"></p>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+<!-- restaurant/templates/restaurant/base.html -->
+
+{% load static %}
+
+<html>
+    <head>
+        <title>Welcome to Guy Fieri's Boston Kitchen</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    </head>
+    <body>
+        <header>
+        <nav>
+            <a href="{% url 'main' %}">Main Page</a>
+            <a href="{% url 'order' %}">Order Page</a>
+        </nav>
+        <h1>Guy Fieri's Boston Kitchen</h1>
+        </header>
+
+        {%  block content %}
+        {% endblock %}
+    </body>
+</html>

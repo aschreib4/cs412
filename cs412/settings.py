@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quotes', # new line added to code
+    'restaurant', #new line added to code
 ]
 
 MIDDLEWARE = [
