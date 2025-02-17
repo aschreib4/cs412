@@ -7,7 +7,7 @@
     <h2>Confirmation Page</h2>
 
     <p>
-        <strong>Hi, {{name}}!</strong> <br>
+        <strong>Hi,</strong> {{name}}<strong>!</strong> <br>
         <strong>Phone:</strong> {{phone}} <br>
         <strong>Email:</strong> {{email}} <br>
     </p>
@@ -18,7 +18,7 @@
                 <p>{{ foods.name }}
                 {% if foods.options %}
                     {% for option in foods.options %}
-                            ,with {{ option }}
+                        , with {{ option }}
                     {% endfor %}
                 {% endif %}
                 </p>
@@ -35,7 +35,7 @@
     </p>
 
     <p>
-        <strong>The order will be ready at approximately</strong> {{readytime}}.
+        <strong>The order will be ready at approximately:</strong> {{readytime}}.
     </p>
 
     <p>
