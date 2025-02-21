@@ -1,0 +1,25 @@
+<!-- mini_fb/base.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, February 21, 2025 -->
+<!-- Description: base file for future html files -->
+
+ {% load static %}
+
+ <html>
+    <head>
+        <title>Mini Facebook</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    </head>
+
+    <body>
+        <head>
+            <h1>Mini Facebook</h1>
+            <nav>
+                <a href="{% url 'show_all_profiles' %}">Show All Profiles</a>
+            </nav>
+        </head>
+
+        {% block content %}
+        {% endblock %}
+    </body>
+ </html>

@@ -1,0 +1,29 @@
+<!-- mini_fb/show_all_profiles.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, February 21, 2025 -->
+<!-- Description: displays all the mini facebook profiles in a table -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Showing all Profiles</h2>
+
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>City</th>
+        <th>Email Address</th>
+        <th>Image</th>
+    </tr>
+    {% for profile in profiles %}
+        <tr>
+            <td>{{profile.first_name}}</td>
+            <td>{{profile.last_name}}</td>
+            <td>{{profile.city}}</td>
+            <td>{{profile.email_address}}</td>
+            <td><img src="{{profile.profile_image_url}}" alt="pictures from fb profiles" style="max-width: 300px; height: auto;"></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quotes', # new line added to code
     'restaurant', #new line added to code
+    'mini_fb', #new line added to code
 ]
 
 MIDDLEWARE = [
