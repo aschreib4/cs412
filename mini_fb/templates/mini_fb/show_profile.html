@@ -1,0 +1,29 @@
+<!-- mini_fb/show_profile.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, February 21, 2025 -->
+<!-- Description: will render a single profile record -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+    <div>
+        <h2>{{profile.first_name}} {{profile.last_name}}'s Profile</h2>
+        <center><img src="{{profile.profile_image_url}}" alt="pictures from fb profiles" style="max-width: 400px; height: auto;"></center>
+    </div>
+
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>City</th>
+            <th>Email Address</th>
+        </tr>
+        <tr>
+            <td>{{profile.first_name}}</td>
+            <td>{{profile.last_name}}</td>
+            <td>{{profile.city}}</td>
+            <td>{{profile.email_address}}</td>
+        </tr>
+    </table>
+{% endblock %}
