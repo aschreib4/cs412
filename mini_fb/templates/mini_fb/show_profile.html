@@ -33,8 +33,9 @@
         {% for statusMessage in profile.get_status_messages %}
             <p>
                 {{statusMessage.message}} <br>
-                <strong>at {{statusMessage.timestamp}}.</strong> <br>
+                <strong>on {{statusMessage.timestamp}}</strong> <br>
             </p>
         {% endfor %}
+        <center><button style="font-size: larger; "><a href="{% url 'create_status' profile.pk %}">Create Status</a></button></center>
      </div> 
 {% endblock %}
