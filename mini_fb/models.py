@@ -24,7 +24,7 @@ class Profile(models.Model):
     
     def get_absolute_url(self):
         '''Return a URL to display one instance of this object.'''
-        return reverse('profile', kwargs={'pk':self.pk})
+        return reverse('show_profile', kwargs={'pk':self.pk})
     
     def get_status_messages(self):
         '''Return a QuerySet of status messages for this profile.'''
