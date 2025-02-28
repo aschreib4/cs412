@@ -26,4 +26,15 @@
             <td>{{profile.email_address}}</td>
         </tr>
     </table>
+
+    <!-- Display the Status Messages for Profiles -->
+    <div>
+        <center><h2>Status Messages:</h2></center>
+        {% for statusMessage in profile.get_status_messages %}
+            <p>
+                {{statusMessage.message}} <br>
+                <strong>at {{statusMessage.timestamp}}.</strong> <br>
+            </p>
+        {% endfor %}
+     </div> 
 {% endblock %}
