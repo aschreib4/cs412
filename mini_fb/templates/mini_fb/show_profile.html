@@ -43,13 +43,15 @@
         <center><h2>Status Messages:</h2></center>
         {% for statusMessage in profile.get_status_messages %}
             <p>
-                {{statusMessage.message}} <br>
-                <strong>on {{statusMessage.timestamp}}</strong> <br>
+                {{statusMessage.message}}
                 {% for img in statusMessage.get_images %}
-                    <br>
+                    <br> <br>
                     <img src='{{img.image_file.url}}' alt='{{img.image_file.url}}' style="max-width: 120px; height: auto;">
                     <br>
                 {% endfor %} <br>
+                <strong>on {{statusMessage.timestamp}}</strong> <br>
+                <!-- link to update this comment -->
+                <button style="font-size: xx-small; "><a href="{% url 'update_status' statusMessage.pk %}">Update</a></button>
                 <!-- link to delete this comment -->
                  <button style="font-size: xx-small; "><a href="{% url 'delete_status' statusMessage.pk %}">Delete</a></button>
             </p>

@@ -3,7 +3,7 @@
 # Friday, February 21, 2025
 # Description: views for the mini_fb application
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Profile, StatusMessage, Image, StatusImage
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
@@ -124,6 +124,25 @@ class DeleteStatusMessageView(DeleteView):
     template_name = "mini_fb/delete_status_form.html"
     context_object_name = 'statusMessage'
 
+    def get_success_url(self):
+        '''Return the URL to redirect to after a successful delete.'''
+
+        #find the PK for this statusMessage:
+        pk = self.kwargs['pk']
+        #find the statusMessage object:
+        statusMessage = StatusMessage.objects.get(pk=pk)
+        #find the PK of the Profile to which this status message is associated:
+        profile = statusMessage.profile
+        #return the URL to redirect to:
+        return reverse('show_profile', kwargs={'pk':profile.pk})
+    
+class UpdateStatusMessageView(UpdateView):
+    '''View class to update a Status Message on a Profile based on its PK.'''
+
+    model = StatusMessage
+    fields = ['message']
+    template_name = "mini_fb/update_status_form.html"
+    context_object_name = 'statusMessage'
 
     def get_success_url(self):
         '''Return the URL to redirect to after a successful delete.'''
@@ -136,3 +155,4 @@ class DeleteStatusMessageView(DeleteView):
         profile = statusMessage.profile
         #return the URL to redirect to:
         return reverse('show_profile', kwargs={'pk':profile.pk})
+    

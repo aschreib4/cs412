@@ -1,0 +1,30 @@
+<!-- mini_fb/update_status_form.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, March 7, 2025 -->
+<!-- Description: HTML form for updating a status message on a profile -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Update this Status Message:</h2>
+<p>{{statusMessage.message}}</p>
+
+<!-- Display the HTML form -->
+ <form method="POST">
+    {% csrf_token %}
+    <table style="height:75px">
+        {{form.as_table}}
+    </table>
+    <br>
+    <center>
+        <input type="submit" name="submit" value="Update">
+    </center>
+</form>
+
+<!-- Add a separate form for a cancel button -->
+<form action="{% url 'show_profile' statusMessage.profile.pk %}" method="GET">
+    <center><input type="submit" value="Cancel"></center>
+</form>
+
+
+{% endblock %}
