@@ -1,0 +1,31 @@
+<!-- mini_fb/update_profile_form.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, March 7, 2025 -->
+<!-- Description: Display the HTML form to update a Profile object -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Update this Profile</h2>
+
+<!-- Display the HTML form
+ need the enctype="multipart/form-data" to send media (binary data)
+ with this form submission -->
+ <form action="{% url 'update_profile' profile.pk %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table style="height:75px">
+        {{form.as_table}}
+    </table>
+    <br>
+    <center>
+        <input type="submit" name="submit" value="Update">
+    </center>
+</form>
+
+<!-- Add a separate form for a cancel button -->
+<form action="{% url 'show_profile' profile.pk %}" method="GET">
+    <center><input type="submit" value="Cancel"></center>
+</form>
+
+
+{% endblock %}

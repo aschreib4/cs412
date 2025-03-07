@@ -4,9 +4,9 @@
 # Description: views for the mini_fb application
 
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
-from .models import Profile
-from .forms import CreateProfileForm, CreateStatusMessageForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Profile, StatusMessage
+from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 from django.urls import reverse
 
 # Create your views here.
@@ -37,6 +37,15 @@ class CreateProfileView(CreateView):
     '''
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
+
+    def form_valid(self, form):
+        '''Override the default method to add some debug information.'''
+
+        #print out the form data:
+        print(f'CreateProfileView.form_valid(): {form.cleaned_data}')
+
+        #delegate work to the superclass to do the rest:
+        return super().form_valid(form)
 
 # Define a subclass of CreateView to handle creation of StatusMessage objects
 class CreateStatusMessageView(CreateView):
@@ -86,3 +95,30 @@ class CreateStatusMessageView(CreateView):
 
         #delegate the work to the superclass method form_valid:
         return super().form_valid(form)
+
+class UpdateProfileView(UpdateView):
+    '''View class to handle update of a profile based on its PK.'''
+
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_fb/update_profile_form.html"
+
+class DeleteStatusMessageView(DeleteView):
+    '''View class to delete a status message on a Profile.'''
+
+    model = StatusMessage
+    template_name = "mini_fb/delete_status_form.html"
+    context_object_name = 'statusMessage'
+
+
+    def get_success_url(self):
+        '''Return the URL to redirect to after a successful delete.'''
+
+        #find the PK for this statusMessage:
+        pk = self.kwargs['pk']
+        #find the statusMessage object:
+        statusMessage = StatusMessage.objects.get(pk=pk)
+        #find the PK of the Profile to which this status message is associated:
+        profile = statusMessage.profile
+        #return the URL to redirect to:
+        return reverse('show_profile', kwargs={'pk':profile.pk})

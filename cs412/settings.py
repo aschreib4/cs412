@@ -134,3 +134,7 @@ STATIC_URL = 'static/' #new
 STATICFILES_DIRS = [    #new
     os.path.join(BASE_DIR, "static")
 ]
+
+# Declarations to reference media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = "/media/"

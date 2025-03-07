@@ -15,8 +15,9 @@ class Profile(models.Model):
     last_name = models.TextField(blank=True)
     city = models.TextField(blank=True)
     email_address = models.TextField(blank=True)
-    profile_image_url = models.URLField(blank=True)
+    #profile_image_url = models.URLField(blank=True)
     #published = models.DateTimeField(auto_now=True)
+    image_file = models.ImageField(blank=True) #an actual image
 
     def __str__(self):
         '''Return a string representation of this model instance.'''
@@ -43,3 +44,36 @@ class StatusMessage(models.Model):
     def __str__(self):
         '''Return a string representation of this model instance.'''
         return f'{self.message}'
+    
+    def get_images(self):
+        '''Method to find all Images that are related to a StatusMessage, and then return a
+        list or QuerySetof those Image(s).'''
+        return Image.objects.filter(statusimage__status_message_id=self.id)
+
+
+class Image(models.Model):
+    '''Model for encapsulating the idea of an image file (not a URL) that is 
+    stored in the Django media directory and some meta-data about that image file.'''
+
+    #defining the data attributes of the Image object:
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    image_file = models.ImageField(upload_to='images/')
+    timestamp = models.DateTimeField(auto_now=True)
+    caption = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        '''Return a string representation of this model instance.'''
+        return f"Image uploaded at {self.timestamp}"
+
+
+class StatusImage(models.Model):
+    '''Model for providing a way to find Images that relate to a StatusMessage,
+    and vice versa, to find the StatusMessage to which an Image is related.'''
+
+    #defining the data attributes of the StatusImage object:
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    status_message = models.ForeignKey(StatusMessage, on_delete=models.CASCADE, related_name='status_images')
+
+    def __str__(self):
+        '''Return a string representation of this model instance.'''
+        return f"Image {self.image.id} linked to StatusMessage {self.status_message.id}"
