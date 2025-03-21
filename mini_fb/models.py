@@ -33,6 +33,20 @@ class Profile(models.Model):
         statusMessages = StatusMessage.objects.filter(profile=self)
         return statusMessages
     
+    def get_friends(self):
+        '''Return a list of the friends' Profiles.'''
+        #use the object manager to filter/retrieve matching Friend records
+        friends = Friend.objects.filter(profile1=self) | Friend.objects.filter(profile2=self)
+
+        friend_profiles = []
+        for friend in friends:
+            if friend.profile1 != self:
+                friend_profiles.append(friend.profile1)
+            elif friend.profile2 != self:
+                friend_profiles.append(friend.profile2)
+
+        return friend_profiles
+    
 class StatusMessage(models.Model):
     '''Model the attributes of the Facebook status message'''
 
@@ -77,3 +91,16 @@ class StatusImage(models.Model):
     def __str__(self):
         '''Return a string representation of this model instance.'''
         return f"Image {self.image.id} linked to StatusMessage {self.status_message.id}"
+    
+class Friend(models.Model):
+    '''Model for encapsulating the idea of an edge connecting two nodes within the 
+    social network (e.g., two Profiles that are friends with each other).'''
+
+    #defining the data attributes of the Friend object:
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='profile1')
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='profile2')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        '''Reutrn a string representation of this model instance.'''
+        return f"{self.profile1} & {self.profile2}"

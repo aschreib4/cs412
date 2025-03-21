@@ -57,5 +57,18 @@
             </p>
         {% endfor %}
         <center><button style="font-size: larger; "><a href="{% url 'create_status' profile.pk %}">Create Status</a></button></center>
-     </div> 
+     </div>
+
+     <!-- Display the Friends for Profiles -->
+    <div>
+        <center><h2>{{profile.first_name}}'s Friends:</h2></center>
+        {% for friend in profile.get_friends %}
+            <p><a href="{% url 'show_profile' friend.id %}">{{ friend.first_name }} {{ friend.last_name }}
+                <br>
+                <center><img src="{{friend.image_file.url}}" alt="Friend Picture" style="max-width: 200px; height: auto;"></center>
+            </a></p>
+        {% empty %}
+            <li>No friends yet!</li>
+        {% endfor %}
+    </div>
 {% endblock %}
