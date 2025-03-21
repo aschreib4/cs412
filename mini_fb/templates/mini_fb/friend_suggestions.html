@@ -1,0 +1,25 @@
+<!-- mini_fb/friend_suggestions.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, March 21, 2025 -->
+<!-- Description: displays the friend suggestions for a single Profile, along with links to add friends -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+    <div>
+        <h2>{{profile.first_name}}'s Recommended Friends</h2>
+
+        {% for suggestion in profile.get_friend_suggestions %}
+            <p><a href="{% url 'show_profile' suggestion.id %}">{{ suggestion.first_name }} {{ suggestion.last_name }}
+                <br>
+                <center><img src="{{suggestion.image_file.url}}" alt="Friend Suggestion Picture" style="max-width: 200px; height: auto;"></center>
+            </a></p>
+        {% empty %}
+            <p>No friend suggestion!</p>
+        {% endfor %}
+
+        <center><button style="font-size: larger; "><a href="{% url 'show_profile' profile.pk %}">Back to Profile</a></button></center>
+
+    </div>
+{% endblock %}

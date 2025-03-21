@@ -47,6 +47,33 @@ class Profile(models.Model):
 
         return friend_profiles
     
+    def add_friend(self, other):
+        '''Add a Friend relation for two Profiles: self and other.'''
+        #using Friend model to create a friendship between two unique profiles that doesn't already exist
+        if self == other:
+            raise ValueError("Can't add yourself as a friend.")
+
+        existing_friendship = (Friend.objects.filter(profile1=self, profile2=other) | 
+        Friend.objects.filter(profile1=other, profile2=self)).exists()
+
+        if existing_friendship:
+            print("This friendship already exists.")
+            return
+
+        new_friend = Friend(profile1=self, profile2=other)
+        new_friend.save()
+        print(f"Friendship between {self} and {other} created.")
+
+    def get_friend_suggestions(self):
+        '''Getting recommended friend Profiles.'''
+        potential_friends = Profile.objects.exclude(pk=self.pk)
+        already_friends = self.get_friends()
+        already_friends_ids = [friend.pk for friend in already_friends]
+        potential_friends = potential_friends.exclude(pk__in=already_friends_ids)
+
+        return potential_friends
+
+    
 class StatusMessage(models.Model):
     '''Model the attributes of the Facebook status message'''
 

@@ -3,8 +3,8 @@
 # Friday, February 21, 2025
 # Description: views for the mini_fb application
 
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import Profile, StatusMessage, Image, StatusImage
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 from django.urls import reverse
@@ -156,3 +156,26 @@ class UpdateStatusMessageView(UpdateView):
         #return the URL to redirect to:
         return reverse('show_profile', kwargs={'pk':profile.pk})
     
+class AddFriendView(View):
+    '''View class to trigger the add_friend method to occur.'''
+
+    def dispatch(self, request, *args, **kwargs):
+        #retrieve the primary keys from the URL parameters
+        profile_pk = kwargs['pk']
+        friend_pk = kwargs['other_pk']
+
+        try:
+            profile = Profile.objects.get(pk=profile_pk)
+            friend = Profile.objects.get(pk=friend_pk)
+        except Profile.DoesNotExist:
+            return redirect('show_profile', pk=profile_pk)
+
+        profile.add_friend(friend)
+
+        return redirect('show_profile', pk=profile.pk)
+    
+class ShowFriendSuggestionsView(DetailView):
+    '''Define a view class to show a singular profile page'''
+    model = Profile
+    template_name = "mini_fb/friend_suggestions.html"
+    context_object_name = "profile"

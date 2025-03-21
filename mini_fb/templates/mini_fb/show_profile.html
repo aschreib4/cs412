@@ -68,7 +68,9 @@
                 <center><img src="{{friend.image_file.url}}" alt="Friend Picture" style="max-width: 200px; height: auto;"></center>
             </a></p>
         {% empty %}
-            <li>No friends yet!</li>
+            <p>No friends yet!</p>
         {% endfor %}
+
+        <center><button style="font-size: larger; "><a href="{% url 'friend_suggestions' profile.pk %}">Friend Suggestions</a></button></center>
     </div>
 {% endblock %}
