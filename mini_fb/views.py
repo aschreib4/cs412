@@ -175,7 +175,21 @@ class AddFriendView(View):
         return redirect('show_profile', pk=profile.pk)
     
 class ShowFriendSuggestionsView(DetailView):
-    '''Define a view class to show a singular profile page'''
+    '''Define a view class to show friend suggestions for a Profile page'''
     model = Profile
     template_name = "mini_fb/friend_suggestions.html"
     context_object_name = "profile"
+
+class ShowNewsFeedView(DetailView):
+    '''Define a view class to display the news feed for a Profile.'''
+    model = Profile
+    template_name = "mini_fb/news_feed.html"
+    context_object_name = "profile"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #get the profile object
+        profile = self.get_object()
+        #get the news feed for this profile
+        context['status_messages'] = profile.get_news_feed()
+        return context

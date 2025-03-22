@@ -72,6 +72,15 @@ class Profile(models.Model):
         potential_friends = potential_friends.exclude(pk__in=already_friends_ids)
 
         return potential_friends
+    
+    def get_news_feed(self):
+        ''' Return all StatusMessages for the profile on which the method was called, as well
+        as all of the friends of that profile.'''
+        friends = self.get_friends()
+        status_messages = (StatusMessage.objects.filter(profile=self) | 
+                        StatusMessage.objects.filter(profile__in=friends)).order_by('-timestamp')
+        
+        return status_messages
 
     
 class StatusMessage(models.Model):

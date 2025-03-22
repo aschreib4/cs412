@@ -5,6 +5,11 @@
 
 {% extends 'mini_fb/base.html' %}
 
+{% block extra_nav_link %}
+    <a href="{% url 'friend_suggestions' profile.pk %}">Friend Suggestions</a>
+    <a href="{% url 'news_feed' profile.pk %}">News Feed</a>
+{% endblock %}
+
 {% block content %}
 
     <div>
@@ -57,7 +62,7 @@
             </p>
         {% endfor %}
         <center><button style="font-size: larger; "><a href="{% url 'create_status' profile.pk %}">Create Status</a></button></center>
-     </div>
+    </div>
 
      <!-- Display the Friends for Profiles -->
     <div>
@@ -71,6 +76,5 @@
             <p>No friends yet!</p>
         {% endfor %}
 
-        <center><button style="font-size: larger; "><a href="{% url 'friend_suggestions' profile.pk %}">Friend Suggestions</a></button></center>
     </div>
 {% endblock %}
