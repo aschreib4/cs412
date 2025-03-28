@@ -15,8 +15,25 @@
         <head>
             <nav>
                 <a href="{% url 'show_all_profiles' %}">Show All Profiles</a>
-                <a href="{% url 'create_profile' %}">Create New Profile</a>
                 {% block extra_nav_link %}{% endblock %}
+                <!-- ADD: URLs for logged in users only -->
+                {% if request.user.is_authenticated %}
+                
+                <a href="{% url 'create_profile' %}">Create New Profile</a>
+                <!-- ADD: URLS for authentication -->
+                <form action="{% url 'logout' %}" method="post"> 
+                    {% csrf_token %}
+                    <button style= "position: absolute; right: 5px; top: 5px; font-size: larger; color:#FF1493;" type="submit">Logout</button>
+                </form>
+                {% else %}
+                <button style= "position: absolute; right: 5px; top: 2.5px; font-size: larger; color:#FF1493;"><a href="{% url 'login' %}">Login</a></button>
+                {% endif %}
+                <hr>
+                {% if request.user.is_authenticated %}
+                Logged in as: {{request.user}}
+                {% else %}
+                Not logged in.
+                {% endif %}
             </nav>
             <h1>Mini Facebook</h1>
         </head>

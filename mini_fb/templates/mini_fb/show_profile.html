@@ -6,8 +6,10 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block extra_nav_link %}
-    <a href="{% url 'friend_suggestions' profile.pk %}">Friend Suggestions</a>
-    <a href="{% url 'news_feed' profile.pk %}">News Feed</a>
+    {% if user == profile.user %}
+        <a href="{% url 'friend_suggestions' profile.pk %}">Friend Suggestions</a>
+        <a href="{% url 'news_feed' profile.pk %}">News Feed</a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -39,8 +41,10 @@
 
     <br>
     
-    <center><button style="font-size: larger; "><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></button></center>
-    
+    {% if user == profile.user %}
+        <center><button style="font-size: larger; "><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></button></center>
+    {% endif %}
+
     </div>
 
     <!-- Display the Status Messages for Profiles -->
@@ -55,13 +59,17 @@
                     <br>
                 {% endfor %} <br>
                 <strong>on {{statusMessage.timestamp}}</strong> <br>
-                <!-- link to update this comment -->
-                <button style="font-size: xx-small; "><a href="{% url 'update_status' statusMessage.pk %}">Update</a></button>
-                <!-- link to delete this comment -->
-                 <button style="font-size: xx-small; "><a href="{% url 'delete_status' statusMessage.pk %}">Delete</a></button>
+                {% if user == profile.user %}
+                    <!-- link to update this comment -->
+                    <button style="font-size: xx-small; "><a href="{% url 'update_status' statusMessage.pk %}">Update</a></button>
+                    <!-- link to delete this comment -->
+                    <button style="font-size: xx-small; "><a href="{% url 'delete_status' statusMessage.pk %}">Delete</a></button>
+                {% endif %}
             </p>
         {% endfor %}
-        <center><button style="font-size: larger; "><a href="{% url 'create_status' profile.pk %}">Create Status</a></button></center>
+        {% if user == profile.user %}
+            <center><button style="font-size: larger; "><a href="{% url 'create_status' profile.pk %}">Create Status</a></button></center>
+        {% endif %}
     </div>
 
      <!-- Display the Friends for Profiles -->

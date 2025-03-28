@@ -1,0 +1,14 @@
+<!-- mini_fb/logged_out.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, March 28, 2025 -->
+<!-- Description: Display the HTML form to logout -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+<h2>You have been logged out.</h2>
+
+<center><a href="{% url 'login' %}">Login</a></center>
+
+{% endblock %}
