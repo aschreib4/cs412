@@ -7,8 +7,8 @@
 
 {% block extra_nav_link %}
     {% if user == profile.user %}
-        <a href="{% url 'friend_suggestions' profile.pk %}">Friend Suggestions</a>
-        <a href="{% url 'news_feed' profile.pk %}">News Feed</a>
+        <a href="{% url 'friend_suggestions' %}">Friend Suggestions</a>
+        <a href="{% url 'news_feed' %}">News Feed</a>
     {% endif %}
 {% endblock %}
 
@@ -42,7 +42,7 @@
     <br>
     
     {% if user == profile.user %}
-        <center><button style="font-size: larger; "><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></button></center>
+        <center><button style="font-size: larger; "><a href="{% url 'update_profile' %}">Update Profile</a></button></center>
     {% endif %}
 
     </div>
@@ -68,7 +68,7 @@
             </p>
         {% endfor %}
         {% if user == profile.user %}
-            <center><button style="font-size: larger; "><a href="{% url 'create_status' profile.pk %}">Create Status</a></button></center>
+            <center><button style="font-size: larger; "><a href="{% url 'create_status' %}">Create Status</a></button></center>
         {% endif %}
     </div>
 

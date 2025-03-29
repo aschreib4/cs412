@@ -3,7 +3,7 @@
 # Friday, February 21, 2025
 # Description: views for the mini_fb application
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View, TemplateView
 from .models import Profile, StatusMessage, Image, StatusImage
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
@@ -40,6 +40,19 @@ class ShowProfilePageView(DetailView):
     template_name = "mini_fb/show_profile.html"
     context_object_name = "profile" # note singular variable name
 
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
+        
+    def get_context_data(self, **kwargs):
+        '''Add context data to the template (user info).'''
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
 # Define a subclass of CreateView to handle creation of Profile objects
 class CreateProfileView(LoginRequiredMixin, CreateView):
     '''A view to handle creation of a new Profile.
@@ -48,6 +61,13 @@ class CreateProfileView(LoginRequiredMixin, CreateView):
     '''
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
+
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
 
     def get_login_url(self):
         '''Return the URL for this app's login page.'''
@@ -79,6 +99,13 @@ class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
 
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
+
     def get_login_url(self):
         '''Return the URL for this app's login page.'''
         
@@ -87,25 +114,20 @@ class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         '''Provide a URL to redirect to after creating a new Status Message.'''
 
-        #create and return a URL:
-        #retrieve the PK from the URL pattern
-        pk = self.kwargs['pk']
+        user = self.request.user
+        profile = get_object_or_404(Profile, user=user)
+
         #call reverse to generate the URL for this Profile
-        return reverse('show_profile', kwargs={'pk':pk})
+        return reverse('show_profile', kwargs={'pk': profile.pk})
     
-    def get_context_data(self):
+    def get_context_data(self, **kwargs):
         '''Return the dictionary of context variables for use in the template.'''
 
-        #calling the superclass method
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
 
-        #find/add the profile to the context data
-        #retrieve the PK from the URL pattern
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
-
-        #add this profile into the context dictionary:
-        context['profile'] = profile
+        user = self.request.user
+        profiles = Profile.objects.filter(user=user)
+        context['profile'] = profiles
         return context
     
     def form_valid(self, form):
@@ -115,11 +137,13 @@ class CreateStatusMessageView(LoginRequiredMixin, CreateView):
         object before saving it to the database.'''
 
         print(form.cleaned_data)
-        #retrieve the PK from the URL pattern
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
+        
+        user = self.request.user
+
+        profile = get_object_or_404(Profile, user=user)
+
         #attach this profile to the status message
-        form.instance.profile = profile #set the FK
+        form.instance.profile = profile
 
         # save the status message to database
         sm = form.save()
@@ -144,6 +168,13 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
+
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
 
     def get_login_url(self):
         '''Return the URL for this app's login page.'''
@@ -202,28 +233,34 @@ class UpdateStatusMessageView(LoginRequiredMixin, UpdateView):
 class AddFriendView(LoginRequiredMixin, View):
     '''View class to trigger the add_friend method to occur.'''
 
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
+
     def get_login_url(self):
         '''Return the URL for this app's login page.'''
         
         return reverse('login')
 
     def dispatch(self, request, *args, **kwargs):
-        #retrieve the primary keys from the URL parameters
-        profile_pk = kwargs['pk']
         friend_pk = kwargs['other_pk']
 
+        user_profile = get_object_or_404(Profile, user=request.user)
+        friend_profile = get_object_or_404(Profile, pk=friend_pk)
+
+        if user_profile == friend_profile:
+            return redirect('show_profile', pk=user_profile.pk)
+
         try:
-            profile = Profile.objects.get(pk=profile_pk)
-            friend = Profile.objects.get(pk=friend_pk)
-        except Profile.DoesNotExist:
-            return redirect('show_profile', pk=profile_pk)
-        
-        if profile.user != request.user:
-            return redirect('login')
+            user_profile.add_friend(friend_profile)
+        except ValueError as e:
+            print(f"Error: {e}")
+            return redirect('show_profile', pk=user_profile.pk)
 
-        profile.add_friend(friend)
-
-        return redirect('show_profile', pk=profile.pk)
+        return redirect('show_profile', pk=user_profile.pk)
     
 class ShowFriendSuggestionsView(DetailView):
     '''Define a view class to show friend suggestions for a Profile page'''
@@ -231,11 +268,25 @@ class ShowFriendSuggestionsView(DetailView):
     template_name = "mini_fb/friend_suggestions.html"
     context_object_name = "profile"
 
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
+
 class ShowNewsFeedView(DetailView):
     '''Define a view class to display the news feed for a Profile.'''
     model = Profile
     template_name = "mini_fb/news_feed.html"
     context_object_name = "profile"
+
+    def get_object(self):
+        '''Get the Profile object associated with the logged-in user.'''
+        try:
+            return Profile.objects.get(user=self.request.user)
+        except Profile.DoesNotExist:
+            return redirect('create_profile')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

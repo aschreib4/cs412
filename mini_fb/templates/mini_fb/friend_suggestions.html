@@ -19,7 +19,7 @@
                 <br>
                 <center><img src="{{suggestion.image_file.url}}" alt="Friend Suggestion Picture" style="max-width: 200px; height: auto;"></center>
             </a></p>
-            <center><button style="font-size: larger; "><a href="{% url 'add_friend' profile.pk suggestion.pk %}">Add Friend</a></button></center>
+            <center><button style="font-size: larger; "><a href="{% url 'add_friend' suggestion.id %}">Add Friend</a></button></center>
         {% empty %}
             <p>No friend suggestions!</p>
         {% endfor %}

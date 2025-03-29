@@ -15,11 +15,16 @@
         <h2>{{profile.first_name}}'s News Feed</h2>
 
         {% for news in profile.get_news_feed %}
+        <div>
             <p><a href="{% url 'show_profile' news.profile.id %}">
                 <center><img src="{{news.profile.image_file.url}}" alt="Status Poster" style="max-width: 200px; height: auto;"></center>
             </a></p>
             <p><strong>{{ news.profile.first_name }} {{ news.profile.last_name }} posted at {{news.timestamp}}:</strong></p>
             <p>{{news.message}}</p>
+            {% for img in news.get_images %}
+                    <center><img src='{{img.image_file.url}}' alt='{{img.image_file.url}}' style="max-width: 140px; height: auto;"></center> <br>
+            {% endfor %} <br>
+        </div>
         {% endfor %}
 
     </div>
