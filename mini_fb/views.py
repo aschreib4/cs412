@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin ## for authentication
 from django.contrib.auth.forms import UserCreationForm ## for new User
 from django.contrib.auth.models import User ## the Django user model
+from django.contrib.auth import login
 
 # Create your views here.
 def show_all_profiles(request):
@@ -41,54 +42,48 @@ class ShowProfilePageView(DetailView):
     context_object_name = "profile" # note singular variable name
 
     def get_object(self):
-        '''Get the Profile object associated with the logged-in user.'''
-        try:
-            return Profile.objects.get(user=self.request.user)
-        except Profile.DoesNotExist:
-            return redirect('create_profile')
-        
-    def get_context_data(self, **kwargs):
-        '''Add context data to the template (user info).'''
-        context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
-        return context
+        if self.request.user.is_authenticated:
+            try:
+                return Profile.objects.get(user=self.request.user)
+            except Profile.DoesNotExist:
+                return redirect('create_profile')
+        else:
+            try:
+                pk = self.kwargs['pk']
+                return Profile.objects.get(pk=pk)
+            except Profile.DoesNotExist:
+                return redirect('create_profile') 
 
 # Define a subclass of CreateView to handle creation of Profile objects
-class CreateProfileView(LoginRequiredMixin, CreateView):
+class CreateProfileView(CreateView):
     '''A view to handle creation of a new Profile.
     (1) Display the HTML form to the user (GET)
     (2) Process the form submission and store the new Profile object (POST)
     '''
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
-
-    def get_object(self):
-        '''Get the Profile object associated with the logged-in user.'''
-        try:
-            return Profile.objects.get(user=self.request.user)
-        except Profile.DoesNotExist:
-            return redirect('create_profile')
-
-    def get_login_url(self):
-        '''Return the URL for this app's login page.'''
-        
-        return reverse('login')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_creation_form'] = UserCreationForm()
+        return context
     
     def form_valid(self, form):
         '''Override the default method to add some debug information.'''
 
-        #print out the form data:
-        print(f'CreateProfileView.form_valid(): {form.cleaned_data}')
+        user_creation_form = UserCreationForm(self.request.POST)
 
-        #find the logged in user
-        user = self.request.user
-        print(f'CreateProfileView.form_valid(): {user}')
+        if user_creation_form.is_valid():
+            user = user_creation_form.save()
+            login(self.request, user)
+            
+            form.instance.user = user
 
-        #attach that user to the form instance (to the Profile object)
-        form.instance.user = user
+            return super().form_valid(form)
+            
+        else:
+            return self.form_invalid(form)
 
-        #delegate work to the superclass to do the rest:
-        return super().form_valid(form)
 
 # Define a subclass of CreateView to handle creation of StatusMessage objects
 class CreateStatusMessageView(LoginRequiredMixin, CreateView):
@@ -301,14 +296,3 @@ class LogoutConfirmationView(TemplateView):
     model = Profile
     template_name = "mini_fb/logged_out.html"
     context_object_name = "profile"
-
-class UserRegistrationView(CreateView):
-    '''A view to show/process the registration form to create a new User.'''
-
-    template_name = 'mini_fb/register.html'
-    form_class = UserCreationForm
-    model = User
-
-    def get_success_url(self):
-        '''The url to redirect to after creaating a new User.'''
-        return reverse('login')
