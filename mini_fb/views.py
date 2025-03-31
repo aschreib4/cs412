@@ -42,17 +42,24 @@ class ShowProfilePageView(DetailView):
     context_object_name = "profile" # note singular variable name
 
     def get_object(self):
+        pk = self.kwargs['pk']
         if self.request.user.is_authenticated:
-            try:
-                return Profile.objects.get(user=self.request.user)
-            except Profile.DoesNotExist:
-                return redirect('create_profile')
+            if pk == str(self.request.user.id):
+                try:
+                    return Profile.objects.filter(user=self.request.user).first()
+                except Profile.DoesNotExist:
+                    return redirect('create_profile')
+            else:
+                try:
+                    return Profile.objects.get(pk=pk)
+                except Profile.DoesNotExist:
+                    return redirect('create_profile')
         else:
             try:
                 pk = self.kwargs['pk']
                 return Profile.objects.get(pk=pk)
             except Profile.DoesNotExist:
-                return redirect('create_profile') 
+                return redirect('create_profile')
 
 # Define a subclass of CreateView to handle creation of Profile objects
 class CreateProfileView(CreateView):
