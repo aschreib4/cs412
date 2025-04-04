@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'quotes', # new line added to code
     'restaurant', #new line added to code
     'mini_fb', #new line added to code
+    'voter_analytics', #new line addded to code
 ]
 
 MIDDLEWARE = [

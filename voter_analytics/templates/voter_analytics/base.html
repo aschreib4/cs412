@@ -1,0 +1,26 @@
+<!-- voter_analytics/base.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, April 4, 2025 -->
+<!-- Description: base file for future html files -->
+
+{% load static %}
+
+<html>
+   <head>
+       <title>Voter Analytics</title>
+       <link rel="stylesheet" href="{% static 'styles.css' %}">
+   </head>
+
+   <body>
+        <header>
+            <nav>
+                <a href="{% url 'voters' %}">All Voter Records</a>
+                {% block extra_nav_link %}{% endblock %}
+            </nav>
+            <h1>Voter Analytics</h1>
+        </header>
+
+    {% block content %}
+    {% endblock %}
+    </body>
+</html>

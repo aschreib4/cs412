@@ -1,0 +1,21 @@
+<!-- voter_analytics/search.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, April 4, 2025 -->
+<!-- Description: HTML form to filter the voter listing -->
+
+<h2>Search Form</h2>
+
+<table>
+<form action="{% url 'voters' %}">
+
+    <table>
+        <tr>
+            <th>City:</th>
+            <td><input type="text" name="city"></td>
+        </tr>
+    </table>
+    <br>
+    <center><input type="submit"></center>
+    
+</form>
+</table>

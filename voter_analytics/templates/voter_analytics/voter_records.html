@@ -1,0 +1,59 @@
+<!-- voter_analytics/voter_records.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, April 4, 2025 -->
+<!-- Description: file to show the voter records -->
+
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        {% include "voter_analytics/search.html" %}    
+    </div>
+
+    <h2>Results</h2>
+	<!-- navigation links for different pages of results -->
+    <div class="row">
+        {% if is_paginated %}
+        <p class="pagination">
+            {% if page_obj.has_previous %}
+                    <span><a href="?page={{ page_obj.previous_page_number }}">Previous. </a></span>
+            {% endif %}
+                    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+            {% if page_obj.has_next %}
+                    <span><a href="?page={{ page_obj.next_page_number }}"> Next.</a></span>
+            {% endif %}
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- Table of Voter Records -->
+    <div class="row">
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Street Address</th>
+                <th>Date of Birth</th>
+                <th>Party</th>
+                <th>Voter Score</th>
+                <th>Details</th>
+            </tr>
+            {% for r in results %}
+            <tr>
+                <td>{{ r.first_name }}</td>
+                <td>{{ r.last_name }}</td>
+                <td>{{ r.street_num }} {{ r.street_name }} {{ r.apt_num}} {{ r.zip_code }} </td>
+                <td>{{ r.dob }}</td>
+                <td>{{ r.party_aff }}</td>
+                <td>{{ r.voter_score }}</td>
+                <td><a href="{% url 'voter' r.pk %}">Details Page</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

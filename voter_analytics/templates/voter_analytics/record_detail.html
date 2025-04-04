@@ -1,0 +1,35 @@
+<!-- voter_analytics/record_detail.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, April 4, 2025 -->
+<!-- Description: show a page for a single Voter record -->
+
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Showing Voter Record for {{r.first_name}} {{r.last_name}}</h1>
+    <table>
+        <tr>
+            <th>Street Address</th>
+            <th>Date of Birth</th>
+            <th>Party Affiliation</th>
+            <th>Registration Date</th>
+            <th>Voter Score</th>
+        </tr>
+        
+        <tr>
+            <td>{{ r.street_num }} {{ r.street_name }} {{ r.apt_num }} {{ r.zip_code }}</td>
+            <td>{{ r.dob }}</td>
+            <td>{{ r.party_aff }}</td>
+            <td>{{ r.date_registration }}</td>
+            <td>{{ r.voter_score }}</td>
+        </tr>
+    </table>
+    <br>
+    <!-- Link to Google Maps -->
+    <h3><a href="https://maps.google.com?q={{ r.street_num }} {{ r.street_name }}
+    {{ r.apt_num }} {{ r.zip_code }}" target="_blank">View Address on Google Maps</a></h3>
+</div>
+
+{% endblock %}
