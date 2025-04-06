@@ -57,16 +57,80 @@ class VoterRecordsListView(ListView):
             dob = self.request.GET['dob']
             if dob:
                 results = results.filter(dob=dob)
+
+        if 'min_dob' in self.request.GET and self.request.GET['min_dob']:
+            min_year = int(self.request.GET['min_dob'])
+            results = results.filter(dob__year__gte=min_year)
+
+        if 'max_dob' in self.request.GET and self.request.GET['max_dob']:
+            max_year = int(self.request.GET['max_dob'])
+            results = results.filter(dob__year__lte=max_year)
+
         if 'party_aff' in self.request.GET:
             party_aff = self.request.GET['party_aff']
             if party_aff:
-                results = results.filter(party_aff=party_aff)
+                if party_aff == "not_rdu":
+                    results = results.exclude(party_aff__in=['R ', 'D ', 'U '])
+                else:
+                    results = results.filter(party_aff=party_aff)
         if 'voter_score' in self.request.GET:
             voter_score = self.request.GET['voter_score']
             if voter_score:
                 results = results.filter(voter_score=voter_score)
+
+        if 'v20state' in self.request.GET:
+            v20state = self.request.GET['v20state']
+            if v20state.lower() == 'on':  # Checkbox checked
+                results = results.filter(v20state=True)
+            elif v20state.lower() == 'off': # Checkbox unchecked
+                results = results.filter(v20state=False)
+            
+        if 'v21town' in self.request.GET:
+            v21town = self.request.GET['v21town']
+            if v21town.lower() == 'on':  # Checkbox checked
+                results = results.filter(v21town=True)
+            elif v21town.lower() == 'off': # Checkbox unchecked
+                results = results.filter(v21town=False)
+
+        if 'v21primary' in self.request.GET:
+            v21primary = self.request.GET['v21primary']
+            if v21primary.lower() == 'on':  # Checkbox checked
+                results = results.filter(v21primary=True)
+            elif v21primary.lower() == 'off':  # Checkbox unchecked
+                results = results.filter(v21primary=False)
+
+        if 'v22general' in self.request.GET:
+            v22general = self.request.GET['v22general']
+            if v22general.lower() == 'on':  # Checkbox checked
+                results = results.filter(v22general=True)
+            elif v22general.lower() == 'off':  # Checkbox unchecked
+                results = results.filter(v22general=False)
+
+        if 'v23town' in self.request.GET:
+            v23town = self.request.GET['v23town']
+            if v23town.lower() == 'on':  # Checkbox checked
+                results = results.filter(v23town=True)
+            elif v23town.lower() == 'off':  # Checkbox unchecked
+                results = results.filter(v23town=False)
                 
         return results
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Pass the filter parameters to the context to retain them in the form after submission
+        context['party_aff'] = self.request.GET.get('party_aff', '')
+        context['dob'] = self.request.GET.get('dob', '')
+        context['voter_score'] = self.request.GET.get('voter_score', '')
+        context['v20state'] = self.request.GET.get('v20state', '')
+        context['v21town'] = self.request.GET.get('v21town', '')
+        context['v21primary'] = self.request.GET.get('v21primary', '')
+        context['v22general'] = self.request.GET.get('v22general', '')
+        context['v23town'] = self.request.GET.get('v23town', '')
+
+        years = list(range(1920, 2026))
+        context['years'] = years
+
+        return context
     
 class VoterDetailView(DetailView):
     '''Display the voter record for a single person.'''

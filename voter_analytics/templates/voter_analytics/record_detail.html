@@ -8,28 +8,52 @@
 {% block content %}
 
 <div class="container">
-    <h1>Showing Voter Record for {{r.first_name}} {{r.last_name}}</h1>
+    <h1>Showing Voter Record for: {{r.first_name}} {{r.last_name}}</h1>
     <table>
         <tr>
             <th>Street Address</th>
-            <th>Date of Birth</th>
-            <th>Party Affiliation</th>
-            <th>Registration Date</th>
-            <th>Voter Score</th>
+            <td>{{ r.street_num }} {{ r.street_name }} {{ r.apt_num }}, Zip Code {{ r.zip_code }} <br>
+                <a href="https://maps.google.com?q={{ r.street_num }} {{ r.street_name }}
+                {{ r.apt_num }} {{ r.zip_code }}" target="_blank">View Address on Google Maps</a>
+            </td>
         </tr>
-        
         <tr>
-            <td>{{ r.street_num }} {{ r.street_name }} {{ r.apt_num }} {{ r.zip_code }}</td>
+            <th>Date of Birth</th>
             <td>{{ r.dob }}</td>
+        </tr>
+        <tr>
+            <th>Party Affiliation</th>
             <td>{{ r.party_aff }}</td>
+        </tr>
+        <tr>
+            <th>Registration Date</th>
             <td>{{ r.date_registration }}</td>
+        </tr>
+        <tr>
+            <th>Voter Score</th>
             <td>{{ r.voter_score }}</td>
         </tr>
+        <tr>
+            <th>Voted in: v20state</th>
+            <td>{{ r.v20state }}</td>
+        </tr>
+        <tr>
+            <th>Voted in: v21town</th>
+            <td>{{ r.v21town }}</td>
+        </tr>
+        <tr>
+            <th>Voted in: v21primary</th>
+            <td>{{ r.v21primary }}</td>
+        </tr>
+        <tr>
+            <th>Voted in: v22general</th>
+            <td>{{ r.v22general }}</td>
+        </tr>
+        <tr>
+            <th>Voted in: v23town</th>
+            <td>{{ r.v23town }}</td>
+        </tr>
     </table>
-    <br>
-    <!-- Link to Google Maps -->
-    <h3><a href="https://maps.google.com?q={{ r.street_num }} {{ r.street_name }}
-    {{ r.apt_num }} {{ r.zip_code }}" target="_blank">View Address on Google Maps</a></h3>
 </div>
 
 {% endblock %}
