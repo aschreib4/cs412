@@ -11,4 +11,5 @@ from .views import *
 urlpatterns = [
     path(r'', VoterRecordsListView.as_view(), name='voters'),
     path(r'voter/<int:pk>', VoterDetailView.as_view(), name='voter'),
+    path(r'graphs', GraphsView.as_view(), name='graphs'),
 ]

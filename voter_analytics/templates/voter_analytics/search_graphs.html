@@ -1,12 +1,12 @@
-<!-- voter_analytics/search.html -->
+<!-- voter_analytics/search_graphs.html -->
 <!-- Made by Annelise Schreiber, aschreib@bu.edu-->
 <!-- Friday, April 4, 2025 -->
-<!-- Description: HTML form to filter the voter listing -->
+<!-- Description: HTML form to filter the voter listing for the graphs -->
 
 <h2>Search Form</h2>
 
 <table>
-<form action="{% url 'voters' %}">
+<form method="GET" action="{% url 'graphs' %}">
 
     <div>
         <label for="party_aff">Party:</label>

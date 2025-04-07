@@ -1,0 +1,87 @@
+<!-- voter_analytics/graphs.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Friday, April 4, 2025 -->
+<!-- Description: file for displaying graphs abput the voter data -->
+
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <table>
+            <form action="{% url 'graphs' %}">
+            
+                <div>
+                    <label for="party_aff">Party:</label>
+                    <select name="party_aff">
+                      <option value="">Any</option>
+                      <option value="D ">Democratic</option>
+                      <option value="R ">Republican</option>
+                      <option value="U ">Unaffiliated</option>
+                      <option value="not_rdu">Other</option>
+                    </select>
+                </div>
+            
+                <div>
+                    <label for="min_dob">Minimum Date of Birth:</label>
+                    <select name="min_dob" id="min_dob">
+                        <option value="">-- Select Minimum Year --</option>
+                        {% for year in years %}
+                            <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            
+                <div>
+                    <label for="max_dob">Maximum Date of Birth:</label>
+                    <select name="max_dob" id="max_dob">
+                    <option value="">-- Select Maximum Year --</option>
+                    {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                
+                  <div>
+                    <label for="voter_score">Voter Score:</label>
+                    <select name="voter_score">
+                        <option value="">Any</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                  </div>
+                
+                  <div>
+                    <label>Election Participation:</label> <br>
+                    <input type="checkbox" name="v20state"> v20state <br>
+                    <input type="checkbox" name="v21town"> v21town <br>
+                    <input type="checkbox" name="v21primary"> v21primary <br>
+                    <input type="checkbox" name="v22general"> v22general <br>
+                    <input type="checkbox" name="v23town"> v23town
+                  </div>
+                
+                <center><input type="submit"></center>
+                
+            </form>  
+    </div>
+
+    <h2>Graphs</h2>
+
+    <h3>Distribution of Voters by Birth Year (Histogram)</h3>
+    {{graph_div_birth_year|safe}}
+
+    <h3>Distribution of Voters by Party Affiliation (Pie Chart)</h3>
+    {{graph_div_party_affiliation|safe}}
+
+    <h3>Distribution of Voters by Election Participation (Histogram)</h3>
+    {{graph_div_election_participation|safe}}
+
+</div>
+
+{% endblock %}
