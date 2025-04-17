@@ -26,7 +26,7 @@ urlpatterns = [
     path("mini_fb/", include("mini_fb.urls")), #new line
     path('', include("quotes.urls") ), #new line
     path('voter_analytics/', include("voter_analytics.urls")), #new line
-
+    path('project/', include("project.urls")), #new line
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) #new line
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #newer line
