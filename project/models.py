@@ -20,13 +20,14 @@ class OwnedItem(models.Model):
     '''Model the attributes for the food items the user owns.'''
 
     item_name = models.TextField()
-    quantity = models.IntegerField()
+    quantity = models.FloatField()
+    units = models.TextField(blank=True)
     expiration_date = models.DateField()
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         '''Return a string representation of this model instance.'''
-        return f"Have {self.quantity} amount of {self.item_name}"
+        return f"{self.quantity} {self.units} of {self.item_name}"
 
 class Recipe(models.Model):
     '''Model the attributes for the recipes on the site.'''
@@ -37,27 +38,34 @@ class Recipe(models.Model):
 
     def __str__(self):
         '''Return a string representation of this model instance.'''
-        return f"{self.reicpe_name}"
+        return f"{self.recipe_name}"
 
 class Ingredient(models.Model):
     '''Model the attributes for the ingredients that are in the recipes.'''
 
     ingredient_name = models.TextField()
-    amount_required = models.IntegerField()
-    units = models.TextField()
+    amount_required = models.FloatField()
+    units = models.TextField(blank=True)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
         '''Return a string representation of this model instance.'''
         return f"Need {self.amount_required} {self.units} of {self.ingredient_name}"
-
+    
 class RecipeCollection(models.Model):
     '''Model the attributes for the collections of recipes that will be formed.'''
 
     collection_name = models.TextField()
     collected_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    recipes = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
         '''Return a string representation of this model instance.'''
         return f"{self.collection_name}"
+    
+# Intermediary model to link Recipe and RecipeCollection (for many to many relationship)
+class RecipeCollectionRecipe(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    collection = models.ForeignKey(RecipeCollection, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.recipe.recipe_name} in {self.collection.collection_name}"
