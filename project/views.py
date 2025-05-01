@@ -42,6 +42,8 @@ class ProfileDetailView(DetailView):
     context_object_name = 'profile'
 
     def get_context_data(self, **kwargs):
+        '''Provide additional context to template'''
+
         # Get the default context data (profile data)
         context = super().get_context_data(**kwargs)
 
@@ -62,6 +64,8 @@ class CreateProfileView(CreateView):
     template_name = "project/create_profile_form.html"
     
     def get_context_data(self, **kwargs):
+        '''Provide additional context to template'''
+
         context = super().get_context_data(**kwargs)
         context['user_creation_form'] = UserCreationForm()
         return context
@@ -125,6 +129,8 @@ class RecipeDetailView(DetailView):
     context_object_name = 'recipe'
 
     def get_context_data(self, **kwargs):
+        '''Provide additional context to template'''
+
         context = super().get_context_data(**kwargs)
 
         # Add the ingredients related to this recipe to the context
@@ -173,6 +179,8 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = 'recipe'
 
     def get_queryset(self):
+        '''Provide additional context to template'''
+
         # Ensure the recipe belongs to the logged-in user
         user_profile = get_user_profile(self.request.user)
         return Recipe.objects.filter(created_by=user_profile)
@@ -234,6 +242,8 @@ class IngredientCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('recipe_detail', kwargs={'pk': self.recipe.pk})
     
     def get_context_data(self, **kwargs):
+        '''Provide additional context to template'''
+
         context = super().get_context_data(**kwargs)
         recipe = get_object_or_404(Recipe, pk=self.kwargs['recipe_id'])
         context['recipe'] = recipe
@@ -266,12 +276,14 @@ class RecipeCollectionDetailView(DetailView):
     context_object_name = 'collection'
 
     def get_context_data(self, **kwargs):
+        '''Provide additional context to template'''
+
         context = super().get_context_data(**kwargs)
         # Get the current collection instance
         collection = self.object
         # Get only recipes for this specific collection
         recipe_links = RecipeCollectionRecipe.objects.filter(collection=collection)
-        context['recipe_links'] = recipe_links  # NOT 'recipes' to match template
+        context['recipe_links'] = recipe_links
         return context
     
 class RecipeCollectionCreateView(LoginRequiredMixin, CreateView):
