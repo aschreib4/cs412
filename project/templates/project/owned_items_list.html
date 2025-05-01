@@ -14,10 +14,11 @@
             You have {{item.quantity}} {{item.units}} of {{item.item_name}}.
             <br>
             This expires on {{item.expiration_date}}.
+            <button class="btn"><a class="specialbtn" href="{% url 'delete_item' item.pk %}">Delete Item</a></button>
         </p>
     {% endfor %}
 {% else %}
     <p>You do not own any items.</p>
 {% endif %}
-
+<button class="btn"><a class="specialbtn" href="{% url 'create_item' %}">Add Owned Item</a></button>
 {% endblock %}

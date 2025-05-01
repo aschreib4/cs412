@@ -1,0 +1,48 @@
+<!-- project/feasible_recipes.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: page for showing which recipes a user can make based on what they have -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Recipes You Can Make</h2>
+
+  {% if recipes_user_can_make %}
+    <ul>
+      {% for recipe_data in recipes_user_can_make %}
+        <li>
+          <h3><a href="{% url 'recipe_detail' recipe_data.recipe.pk %}">{{ recipe_data.recipe.recipe_name }}</a></h3>
+          <p>You have all the ingredients to make this recipe!</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You cannot make any recipes at the moment!</p>
+  {% endif %}
+
+<h2>Recipes You Cannot Make -- Without Grocery Shopping First!</h2>
+
+  {% if recipes_user_cannot_make %}
+    <ul>
+      {% for recipe_data in recipes_user_cannot_make %}
+        <li>
+          <h3><a href="{% url 'recipe_detail' recipe_data.recipe.pk %}">{{ recipe_data.recipe.recipe_name }}</a></h3>
+
+          {% if recipe_data.missing_ingredients %}
+            <p><strong>Missing Ingredients:</strong></p>
+            <ul>
+              {% for ingredient in recipe_data.missing_ingredients %}
+                <li>{{ ingredient.ingredient_name }} ({{ ingredient.amount_required }} {{ ingredient.units }})</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have all ingredients for all available recipes!</p>
+  {% endif %}
+
+{% endblock %}

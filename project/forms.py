@@ -4,7 +4,7 @@
 # Description: form to collect inputs to create a new Project Profile, Recipe Collection, Recipe, etc.
 
 from django import forms
-from .models import ProjectProfile, RecipeCollection, RecipeCollectionRecipe, Recipe, Ingredient
+from .models import ProjectProfile, RecipeCollection, RecipeCollectionRecipe, Recipe, Ingredient, OwnedItem
 
 class CreateProfileForm(forms.ModelForm):
     '''A form to add a profile to the database.'''
@@ -29,6 +29,14 @@ class RecipeForm(forms.ModelForm):
         '''Associate this form with a model in our database.'''
         model = Recipe
         fields = ['recipe_name', 'description']
+
+class ItemForm(forms.ModelForm):
+    '''Form for handling validation and rendering.'''
+
+    class Meta:
+        '''Associate this form with a model in our database.'''
+        model = OwnedItem
+        fields = ['item_name', 'quantity', 'units', 'expiration_date']
 
 class IngredientForm(forms.ModelForm):
     '''Form for handling validation and rendering.'''

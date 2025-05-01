@@ -15,6 +15,8 @@ urlpatterns = [
     path('profiles/<int:pk>/', ProfileDetailView.as_view(), name='profile_detail'),
     path('create_profile', CreateProfileView.as_view(), name="create_profile"),
     path('items/', owned_items_view, name='item_list'),
+    path('items/create/', ItemCreateView.as_view(), name='create_item'),
+    path('items/delete/<int:pk>/', ItemDeleteView.as_view(), name='delete_item'),
     #recipe related:
     path('recipes/', RecipeListView.as_view(), name='recipe_list'),
     path('recipes/<int:pk>/', RecipeDetailView.as_view(), name='recipe_detail'),
@@ -23,6 +25,7 @@ urlpatterns = [
     path('recipes/delete/<int:pk>/', RecipeDeleteView.as_view(), name='delete_recipe'),
     path('recipes/<int:recipe_id>/ingredients/create/', IngredientCreateView.as_view(), name='create_ingredient'),
     path('user/recipes/', UserRecipeListView.as_view(), name='user_recipe_list'),
+    path('recipes/feasible_recipes/', FeasibleRecipesPageView.as_view(), name='feasible_recipes'),
     #recipe collections
     path('collections/', RecipeCollectionListView.as_view(), name='collection_list'),
     path('collections/<int:pk>/', RecipeCollectionDetailView.as_view(), name='collection_detail'),

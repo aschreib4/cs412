@@ -9,8 +9,8 @@ from django.http import Http404
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, FormView
 from .models import ProjectProfile, OwnedItem, Recipe, Ingredient, RecipeCollection, RecipeCollectionRecipe
-from django.urls import reverse, reverse_lazy
-from .forms import CreateProfileForm, RecipeForm, IngredientForm, RecipeCollectionForm, RecipeCollectionRecipeForm
+from django.urls import reverse_lazy
+from .forms import CreateProfileForm, RecipeForm, IngredientForm, RecipeCollectionForm, ItemForm
 from django.contrib.auth.forms import UserCreationForm ## for new User
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin ## for authentication
@@ -180,6 +180,38 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('user_recipe_list')
     
+class ItemCreateView(LoginRequiredMixin, CreateView):
+    '''Define a class to create a recipe page'''
+
+    model = OwnedItem
+    form_class = ItemForm
+    template_name = 'project/create_item.html'
+    
+    def form_valid(self, form):
+        user_profile = get_object_or_404(ProjectProfile, project_user=self.request.user)
+        form.instance.profile = user_profile
+        form.instance.created_by = user_profile
+        owneditem = form.save()
+        return redirect('item_list')
+    
+    def get_success_url(self):
+        return reverse_lazy('item_list')
+
+class ItemDeleteView(LoginRequiredMixin, DeleteView):
+    '''Define a class to delete a recipe page'''
+
+    model = OwnedItem
+    template_name = 'project/delete_item.html'
+    context_object_name = 'owneditem'
+
+    def get_queryset(self):
+        # Ensure the item belongs to the logged-in user
+        user_profile = get_user_profile(self.request.user)
+        return OwnedItem.objects.filter(profile=user_profile)
+
+    def get_success_url(self):
+        return reverse_lazy('item_list')
+    
 class IngredientCreateView(LoginRequiredMixin, CreateView):
     '''Define a class to create ingredients for a recipe'''
 
@@ -309,6 +341,93 @@ def add_recipe_to_collection(request, recipe_id):
             'recipe': recipe,
             'collections': collections
         })
+
+# Function that will check if a user can make a recipe
+def can_make_recipe(user_profile, recipe):
+    required_ingredients = Ingredient.objects.filter(recipe=recipe)
+
+    for ingredient in required_ingredients:
+        owned_item = OwnedItem.objects.filter(profile=user_profile, item_name=ingredient.ingredient_name).first()
+
+        if not owned_item or owned_item.quantity < ingredient.amount_required:
+            return False
+
+    return True
+
+# Function to check for a user's missing ingredients
+def check_missing_ingredients(user_profile, recipe):
+    missing_ingredients = []
+    required_ingredients = Ingredient.objects.filter(recipe=recipe)
+
+    for ingredient in required_ingredients:
+        owned_item = OwnedItem.objects.filter(profile=user_profile, item_name=ingredient.ingredient_name).first()
+
+        if not owned_item:
+            missing_ingredients.append(ingredient)
+        elif owned_item.quantity < ingredient.amount_required:
+            missing_ingredients.append(ingredient)
+
+    return missing_ingredients
+
+def recipe_list(request):
+    user_profile = ProjectProfile.objects.filter(user=request.user).first()
+    recipes = Recipe.objects.all()
+
+    recipes_user_can_make = []
+
+    for recipe in recipes:
+        missing_ingredients = check_missing_ingredients(user_profile, recipe)
+        if not missing_ingredients:
+            recipes_user_can_make.append({
+                'recipe': recipe,
+                'missing_ingredients': missing_ingredients
+            })
+    return render(request, 'project/feasible_recipes.html', {
+        'recipes': recipes_user_can_make,
+    })
+
+class FeasibleRecipesPageView(TemplateView):
+    '''Define a view class to display the feasible recipes for a user'''
+
+    template_name = 'project/feasible_recipes.html'
+
+    def get_context_data(self, **kwargs):
+        user_profile = ProjectProfile.objects.filter(project_user=self.request.user).first()
+        
+        if not user_profile:
+            return {}
+
+        recipes_user_can_make = []
+        recipes_user_cannot_make = []
+        
+        recipes = Recipe.objects.prefetch_related('ingredients').all()
+
+        owned_items_dict = {item.item_name: item for item in OwnedItem.objects.filter(profile=user_profile)}
+
+        for recipe in recipes:
+            missing_ingredients = []
+
+            for ingredient in recipe.ingredients.all():
+                owned_item = owned_items_dict.get(ingredient.ingredient_name)
+
+                if not owned_item or owned_item.quantity < ingredient.amount_required:
+                    missing_ingredients.append(ingredient)
+
+            if not missing_ingredients:
+                recipes_user_can_make.append({
+                    'recipe': recipe,
+                    'missing_ingredients': missing_ingredients
+                })
+            else:
+                recipes_user_cannot_make.append({
+                    'recipe': recipe,
+                    'missing_ingredients': missing_ingredients
+                })
+
+        context = super().get_context_data(**kwargs)
+        context['recipes_user_can_make'] = recipes_user_can_make
+        context['recipes_user_cannot_make'] = recipes_user_cannot_make
+        return context
 
 class LogoutConfirmationView(TemplateView):
     '''Define a view class to show a logout confirmation page'''

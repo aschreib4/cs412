@@ -14,6 +14,7 @@
    <body>
        <head>
         <h1>My Kitchen</h1>
+        <img src="{% static 'images/fridge3.png' %}" alt="Icon" class="top-right-icon">
            <nav>
                <a href="{% url 'homepage' %}">Home</a>
                <a href="{% url 'profile_list' %}">Profiles</a>
@@ -26,6 +27,7 @@
                 <a href="{% url 'item_list' %}">My Owned Items</a>
                 <a href="{% url 'user_recipe_list' %}">Recipes I Created</a>
                 <a href="{% url 'user_collection_list' %}">Collections I Made</a>
+                <a href="{% url 'feasible_recipes' %}">Recipes I Can Make</a>
                 {% else %}
                 <a href="{% url 'create_profile' %}">Create New Profile</a>
                 {% endif %}
