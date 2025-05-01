@@ -6,10 +6,11 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.contrib import messages
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, FormView
 from .models import ProjectProfile, OwnedItem, Recipe, Ingredient, RecipeCollection, RecipeCollectionRecipe
 from django.urls import reverse, reverse_lazy
-from .forms import CreateProfileForm, RecipeForm, IngredientForm, RecipeCollectionForm
+from .forms import CreateProfileForm, RecipeForm, IngredientForm, RecipeCollectionForm, RecipeCollectionRecipeForm
 from django.contrib.auth.forms import UserCreationForm ## for new User
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin ## for authentication
@@ -257,16 +258,57 @@ class RecipeCollectionCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('collection_list')
 
-class RecipeCollectionUpdateView(UpdateView):
-    model = RecipeCollection
-    fields = ['collection_name', 'collected_by']
-    template_name = 'project/recipe_collection_form.html'
-    success_url = '/collections/'
+class RecipeCollectionDeleteView(LoginRequiredMixin, DeleteView):
+    '''Define a class to delete a recipe collection'''
 
-class RecipeCollectionDeleteView(DeleteView):
     model = RecipeCollection
-    template_name = 'project/recipe_collection_confirm_delete.html'
-    success_url = '/collections/'
+    template_name = 'project/delete_collection.html'
+    context_object_name = 'collection'
+
+    def get_queryset(self):
+        # Ensure the collection belongs to the logged-in user
+        user_profile = get_user_profile(self.request.user)
+        return RecipeCollection.objects.filter(collected_by=user_profile)
+
+    def get_success_url(self):
+        return reverse_lazy('user_collection_list')
+
+def add_recipe_to_collection(request, recipe_id):
+    """Function-based view for adding a recipe to a collection"""
+
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+
+    if request.method == 'POST':
+        
+        collection_id = request.POST.get('collection_id')
+
+        if not collection_id:
+            messages.error(request, "No collection was selected.")
+            return redirect('recipe_detail', pk=recipe.pk)
+
+        project_profile = get_object_or_404(ProjectProfile, project_user=request.user)
+        collection = get_object_or_404(RecipeCollection, collection_name=collection_id, collected_by=project_profile)
+
+        # Check if the recipe is already in the selected collection
+        if RecipeCollectionRecipe.objects.filter(recipe=recipe, collection=collection).exists():
+            messages.warning(request, "This recipe is already in this collection.")
+            return redirect('recipe_detail', pk=recipe.pk)
+        
+        # Create a new RecipeCollectionRecipe object and associate it with the recipe and collection
+        recipecollectionrecipe = RecipeCollectionRecipe(recipe=recipe, collection=collection)
+        recipecollectionrecipe.save()
+
+        messages.success(request, f'Added {recipe.recipe_name} to the collection "{collection.collection_name}".')
+        return redirect('recipe_list')
+
+    else:
+        project_profile = get_object_or_404(ProjectProfile, project_user=request.user)
+        collections = RecipeCollection.objects.filter(collected_by=project_profile)
+
+        return render(request, 'project/add_recipe_to_collection.html', {
+            'recipe': recipe,
+            'collections': collections
+        })
 
 class LogoutConfirmationView(TemplateView):
     '''Define a view class to show a logout confirmation page'''

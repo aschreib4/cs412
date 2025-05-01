@@ -1,0 +1,26 @@
+<!-- project/add_recipe_to_collection.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: file for adding a recipe to a collection of recipes -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>Add Recipe {{ recipe.recipe_name }} to a Collection</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    
+    <label for="collection_id">Select Collection:</label>
+    <select name="collection_id" id="collection_id">
+        {% for collection in collections %}
+            <option value="{{ collection.collection_name }}">{{ collection.collection_name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add to Collection</button>
+</form>
+
+<button><a class="specialbtn" href="{% url 'recipe_list' %}">Cancel</a></button>
+
+{% endblock %}

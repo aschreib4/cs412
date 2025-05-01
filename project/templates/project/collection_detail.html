@@ -9,7 +9,7 @@
 <h2>{{ collection.collection_name }}</h2>
 <h3>Collected by: {{ collection.collected_by.first_name }} {{ collection.collected_by.last_name }}</h3>
 <div>
-    <h3>Recipes Included</h3>
+    <h3 style="color: black;">Recipes Included</h3>
     {% if recipe_links %}
     <ul>
         {% for link in recipe_links %}

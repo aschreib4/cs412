@@ -7,6 +7,11 @@
 
 {% block content %}
 <h2>{{ recipe.recipe_name }}</h2>
+
+{% if request.user.is_authenticated %}
+  <button class="btn"><a class="specialbtn" href="{% url 'add_recipe_to_collection' recipe.pk %}">Add to a Collection</a></button>
+{% endif %} 
+
 <p>{{ recipe.description }}</p>
 <p><strong>Created by:</strong> 
    {{ recipe.created_by.first_name }} {{ recipe.created_by.last_name }}
@@ -19,7 +24,4 @@
       <li>No ingredients found for this recipe.</li>
     {% endfor %}
   </ul>
-{% if request.user.is_authenticated %}
-  <a href="{% url 'create_ingredient' recipe.pk %}">Add Ingredient</a>
-{% endif %}
 {% endblock %}

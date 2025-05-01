@@ -27,8 +27,9 @@ urlpatterns = [
     path('collections/', RecipeCollectionListView.as_view(), name='collection_list'),
     path('collections/<int:pk>/', RecipeCollectionDetailView.as_view(), name='collection_detail'),
     path('collections/create/', RecipeCollectionCreateView.as_view(), name='collection_create'),
-    path('collections/<int:pk>/edit/', RecipeCollectionUpdateView.as_view(), name='collection_update'),
+    path('collections/delete/<int:pk>/', RecipeCollectionDeleteView.as_view(), name='collection_delete'),
     path('user/collections/', UserCollectionListView.as_view(), name='user_collection_list'),
+    path('recipes/<int:recipe_id>/add_to_collection/', add_recipe_to_collection, name='add_recipe_to_collection'),
     #authorization-related URLS:
     path('login/', auth_views.LoginView.as_view(template_name='project/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page="logout_confirmation"), name='logout'),

@@ -37,3 +37,10 @@ class IngredientForm(forms.ModelForm):
         '''Associate this form with a model in our database.'''
         model = Ingredient
         fields = ['ingredient_name', 'amount_required', 'units']
+
+class RecipeCollectionRecipeForm(forms.ModelForm):
+    '''Form for handling validation and rendering.'''
+
+    class Meta:
+        model = RecipeCollectionRecipe
+        fields = ['collection']

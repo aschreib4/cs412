@@ -1,0 +1,25 @@
+<!-- project/delete_collection.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: html form for deleting a recipe collection -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+  <h1>Are you sure you want to delete this recipe collection?</h1>
+
+  <p>Collection: {{ collection.collection_name }}</p>
+
+  <!-- Form to submit the delete request -->
+<form method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Delete">
+</form>
+<!-- Form to cancel the delete request -->
+<form action="{% url 'user_collection_list' %}" method="GET">
+  {% csrf_token %}
+  <input type="submit" value="Cancel">
+</form>
+
+{% endblock %}
