@@ -8,11 +8,12 @@
 <html>
    <head>
        <title>My Kitchen</title>
-       <!-- put css stuff in -->
+       <link rel="stylesheet" href="{% static 'project.css' %}">
    </head>
 
    <body>
        <head>
+        <h1>My Kitchen</h1>
            <nav>
                <a href="{% url 'homepage' %}">Home</a>
                <a href="{% url 'profile_list' %}">Profiles</a>
@@ -23,22 +24,23 @@
                 {% if request.user.is_authenticated %}
                 <!-- ADD: URLS for authentication -->
                 <a href="{% url 'item_list' %}">My Owned Items</a>
-                <form action="{% url 'logout' %}" method="post"> 
-                    {% csrf_token %}
-                    <button style= "position: absolute; right: 5px; top: 5px; font-size: larger; color:#FF1493;" type="submit">Logout</button>
-                </form>
+                <a href="{% url 'user_recipe_list' %}">Recipes I Created</a>
+                <a href="{% url 'user_collection_list' %}">Collections I Made</a>
                 {% else %}
                 <a href="{% url 'create_profile' %}">Create New Profile</a>
-                <button style= "position: absolute; right: 5px; top: 2.5px; font-size: larger; color:#FF1493;"><a href="{% url 'login' %}">Login</a></button>
                 {% endif %}
                 <hr>
                 {% if request.user.is_authenticated %}
-                Logged in as: {{request.user}}
+                <span class="text">Logged in as: {{request.user}}</span>
+                <form action="{% url 'logout' %}" method="post"> 
+                    {% csrf_token %}
+                    <button class="btn" type="submit">Logout</button>
+                </form>
                 {% else %}
-                Not logged in.
+                <span class="text">Not logged in.</span>
+                <button class="btn"><a class="specialbtn" href="{% url 'login' %}">Login</a></button>
                 {% endif %}
            </nav>
-           <h1>My Kitchen</h1>
        </head>
 
        {% block content %}

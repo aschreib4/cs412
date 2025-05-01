@@ -11,7 +11,7 @@
     {% for projectprofile in projectprofiles %}
     <div>
         <h3>{{ projectprofile.first_name }} {{ projectprofile.last_name }}</h3>
-        <a href="{% url 'profile_detail' projectprofile.id %}">View Profile</a>
+        <button><a class="specialbtn" href="{% url 'profile_detail' projectprofile.id %}">View Profile</a></button>
     </div>
     {% endfor %}
 </div>

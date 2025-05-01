@@ -1,0 +1,27 @@
+<!-- project/update_recipe.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: html form for updating recipes/ingredients -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Update Recipe: {{ object.recipe_name }}</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <h3>Ingredients</h3>
+    <ul>
+      {% for ingredient in object.ingredients.all %}
+        <li>{{ ingredient.ingredient_name }} - {{ ingredient.amount_required }} {{ ingredient.units }}</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'create_ingredient' recipe_id=object.pk %}">Add Ingredient</a>
+    <br> <br>
+    <button type="submit">Update Recipe</button>
+  </form>
+
+{% endblock %}

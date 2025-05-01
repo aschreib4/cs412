@@ -5,15 +5,22 @@
 
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View, TemplateView
+from django.http import Http404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import ProjectProfile, OwnedItem, Recipe, Ingredient, RecipeCollection, RecipeCollectionRecipe
-from django.urls import reverse
-from .forms import CreateProfileForm
+from django.urls import reverse, reverse_lazy
+from .forms import CreateProfileForm, RecipeForm, IngredientForm, RecipeCollectionForm
 from django.contrib.auth.forms import UserCreationForm ## for new User
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin ## for authentication
 
 # Create your views here.
+def get_user_profile(user):
+    try:
+        return ProjectProfile.objects.get(project_user=user)
+    except ProjectProfile.DoesNotExist:
+        raise Http404("Profile not found")
+    
 class HomePageView(TemplateView):
     '''Define a view class to display the home page'''
 
@@ -98,6 +105,17 @@ class RecipeListView(ListView):
     template_name = 'project/recipe_list.html'
     context_object_name = 'recipes'
 
+class UserRecipeListView(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = 'project/user_recipe_list.html'
+    context_object_name = 'userrecipes'
+
+    def get_queryset(self):
+        # Get the ProjectProfile for the logged-in user
+        profile = ProjectProfile.objects.get(project_user=self.request.user)
+        # Filter the recipes by the logged-in user's profile
+        return Recipe.objects.filter(created_by=profile)
+
 class RecipeDetailView(DetailView):
     '''Define a view class to show a singular recipe page'''
 
@@ -105,12 +123,107 @@ class RecipeDetailView(DetailView):
     template_name = 'project/recipe_detail.html'
     context_object_name = 'recipe'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Add the ingredients related to this recipe to the context
+        recipe = self.get_object()
+        context['ingredients'] = recipe.ingredients.all()
+
+        return context
+
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    '''Define a class to create a recipe page'''
+
+    model = Recipe
+    form_class = RecipeForm
+    template_name = 'project/create_recipe.html'
+    
+    def form_valid(self, form):
+        user_profile = get_object_or_404(ProjectProfile, project_user=self.request.user)
+        form.instance.profile = user_profile
+        form.instance.created_by = user_profile
+        recipe = form.save()
+        return redirect('create_ingredient', recipe_id=recipe.pk)
+    
+    def get_success_url(self):
+        return reverse_lazy('project/recipe_list')
+    
+class RecipeUpdateView(LoginRequiredMixin, UpdateView):
+    '''Define a class to update a recipe page'''
+
+    model = Recipe
+    form_class = RecipeForm
+    template_name = 'project/update_recipe.html'
+    
+    def get_queryset(self):
+        # Ensure the recipe belongs to the logged-in user
+        user_profile = get_user_profile(self.request.user)
+        return Recipe.objects.filter(created_by=user_profile)
+    
+    def get_success_url(self):
+        return reverse_lazy('user_recipe_list')
+    
+class RecipeDeleteView(LoginRequiredMixin, DeleteView):
+    '''Define a class to delete a recipe page'''
+
+    model = Recipe
+    template_name = 'project/delete_recipe.html'
+    context_object_name = 'recipe'
+
+    def get_queryset(self):
+        # Ensure the recipe belongs to the logged-in user
+        user_profile = get_user_profile(self.request.user)
+        return Recipe.objects.filter(created_by=user_profile)
+
+    def get_success_url(self):
+        return reverse_lazy('user_recipe_list')
+    
+class IngredientCreateView(LoginRequiredMixin, CreateView):
+    '''Define a class to create ingredients for a recipe'''
+
+    model = Ingredient
+    form_class = IngredientForm
+    template_name = 'project/create_ingredient.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Get the recipe from the URL
+        self.recipe = get_object_or_404(Recipe, pk=self.kwargs['recipe_id'])
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        recipe = get_object_or_404(Recipe, pk=self.kwargs['recipe_id'])
+        form.instance.recipe = recipe
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        # Redirect to the recipe detail page after successful ingredient creation
+        return reverse_lazy('recipe_detail', kwargs={'pk': self.recipe.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        recipe = get_object_or_404(Recipe, pk=self.kwargs['recipe_id'])
+        context['recipe'] = recipe
+        context['form'] = self.get_form()
+        return context
+
 class RecipeCollectionListView(ListView):
     '''Define a view class to show all recipe collections'''
 
     model = RecipeCollection
     template_name = 'project/collection_list.html'
     context_object_name = 'collections'
+
+class UserCollectionListView(LoginRequiredMixin, ListView):
+    model = RecipeCollection
+    template_name = 'project/user_collection_list.html'
+    context_object_name = 'usercollections'
+
+    def get_queryset(self):
+        # Get the ProjectProfile for the logged-in user
+        profile = ProjectProfile.objects.get(project_user=self.request.user)
+        # Filter the recipes by the logged-in user's profile
+        return RecipeCollection.objects.filter(collected_by=profile)
 
 class RecipeCollectionDetailView(DetailView):
     '''Define a view class to show a singular recipe collection page'''
@@ -128,11 +241,21 @@ class RecipeCollectionDetailView(DetailView):
         context['recipe_links'] = recipe_links  # NOT 'recipes' to match template
         return context
     
-class RecipeCollectionCreateView(CreateView):
+class RecipeCollectionCreateView(LoginRequiredMixin, CreateView):
+    '''Define a class to create recipe collections'''
+
     model = RecipeCollection
-    fields = ['collection_name', 'collected_by']
+    form_class = RecipeCollectionForm
     template_name = 'project/recipe_collection_form.html'
-    success_url = '/collections/'
+
+    def form_valid(self, form):
+        user_profile = get_object_or_404(ProjectProfile, project_user=self.request.user)
+        form.instance.collected_by = user_profile
+        collection = form.save()
+        return super().form_valid(form)
+        
+    def get_success_url(self):
+        return reverse_lazy('collection_list')
 
 class RecipeCollectionUpdateView(UpdateView):
     model = RecipeCollection

@@ -14,8 +14,10 @@
     </div>
     {% endfor %}
 </div>
+{% if request.user.is_authenticated %}
 <h2>Create a New Collection</h2>
 <div>
-    <button><a href="{% url 'collection_create' %}">Create Collection</a></button>
+    <button><a class="specialbtn" href="{% url 'collection_create' %}">Create Collection</a></button>
 </div>
+{% endif %}
 {% endblock %}

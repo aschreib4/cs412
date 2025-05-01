@@ -1,0 +1,21 @@
+<!-- project/create_ingredient.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: html form for creating ingredients -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Add an Ingredient to {{ recipe.recipe_name }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Add Ingredient</button>
+</form>
+  
+<p><a href="{% url 'recipe_detail' recipe.pk %}">Back to Recipe Details</a></p>
+
+{% endblock %}

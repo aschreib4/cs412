@@ -1,0 +1,22 @@
+<!-- project/user_recipe_list.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: listing of all the recipes that are made by the logged in user -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Recipes Created By You</h2>
+    {% for recipe in userrecipes %}
+        <li>
+            <a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.recipe_name }}</a>
+            <button><a class="specialbtn" href="{% url 'update_recipe' recipe.pk %}">Update</a></button>
+            <button><a class="specialbtn" href="{% url 'delete_recipe' recipe.pk %}">Delete</a></button>
+        </li>
+        <br>
+    {% empty %}
+        <li>No recipes created yet.</li>
+    {% endfor %}
+
+{% endblock %}

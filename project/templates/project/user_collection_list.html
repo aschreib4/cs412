@@ -1,0 +1,19 @@
+<!-- project/user_collection_list.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: listing of all the recipes that are on the app -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Collections Made By You</h2>
+    {% for collection in usercollections %}
+        <li>
+            <a href="{% url 'collection_detail' collection.pk %}">{{ collection.collection_name }}</a>
+        </li>
+    {% empty %}
+        <li>No collections created yet.</li>
+    {% endfor %}
+
+{% endblock %}

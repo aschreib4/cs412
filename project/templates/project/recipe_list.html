@@ -6,12 +6,16 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
-<h2>The Recipes</h2>
+<h2>All Recipes</h2>
 <div>
     {% for recipe in recipes %}
     <div>
         <a href="{% url 'recipe_detail' recipe.pk %}"><strong>{{ recipe.recipe_name }}</strong></a>
     </div>
     {% endfor %}
+    <br>
+    {% if request.user.is_authenticated %}
+    <button class="btn"><a class="specialbtn" href="{% url 'create_recipe' %}">Create a New Recipe</a></button>
+    {% endif %}
 </div>
 {% endblock %}

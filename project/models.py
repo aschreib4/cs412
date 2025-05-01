@@ -56,9 +56,9 @@ class Ingredient(models.Model):
     '''Model the attributes for the ingredients that are in the recipes.'''
 
     ingredient_name = models.TextField()
-    amount_required = models.FloatField()
+    amount_required = models.FloatField(blank=True)
     units = models.TextField(blank=True)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients')
 
     def __str__(self):
         '''Return a string representation of this model instance.'''

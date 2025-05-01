@@ -1,0 +1,128 @@
+/* CSS File for the Project Application (Thursday 5/1/25) */
+
+body {
+    font-family: 'Trebuchet MS', sans-serif;
+    line-height: 1.6;
+    background-color: #e6d8ee ;
+    color: #824aa0;
+    padding: 1.2rem
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #824aa0;
+}
+
+h2 {
+    font-size: 2rem;
+    color: black;
+}
+
+h3 {
+    color: #824aa0;
+}
+
+p {
+    font-size: 1rem;
+    color: black;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+}
+
+ul, li {
+    color: black;
+}
+
+a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+    color: #824aa0;
+}
+
+a:hover {
+    color: #3c1349;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+button {
+    background-color: #3c1349;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+button:hover {
+    background-color: black;
+    transform: scale(1.05);
+}
+
+.text, .btn {
+    color:white;
+}
+
+.btn {
+    margin-top: 0.5rem;
+}
+
+.specialbtn {
+    color: white;
+}
+
+.specialbtn:hover {
+    color: white;
+}
+
+nav {
+    background-color: #824aa0;
+    padding: 0.8rem 1rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav ul li {
+    padding: 0.5rem 1rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 0.5rem 0.5rem;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.header {
+    background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+  
+.footer {
+    background: linear-gradient(45deg, #ff7e5f 0%, #feb47b 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
