@@ -1,0 +1,47 @@
+<!-- project/base.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: base file for future html files -->
+
+{% load static %}
+
+<html>
+   <head>
+       <title>My Kitchen</title>
+       <!-- put css stuff in -->
+   </head>
+
+   <body>
+       <head>
+           <nav>
+               <a href="{% url 'homepage' %}">Home</a>
+               <a href="{% url 'profile_list' %}">Profiles</a>
+               <a href="{% url 'recipe_list' %}">Recipes</a>
+               <a href="{% url 'collection_list' %}">Recipe Collections</a>
+               {% block extra_nav_link %}{% endblock %}
+                <!-- ADD: URLs for logged in users only -->
+                {% if request.user.is_authenticated %}
+                <!-- ADD: URLS for authentication -->
+                <a href="{% url 'item_list' %}">My Owned Items</a>
+                <form action="{% url 'logout' %}" method="post"> 
+                    {% csrf_token %}
+                    <button style= "position: absolute; right: 5px; top: 5px; font-size: larger; color:#FF1493;" type="submit">Logout</button>
+                </form>
+                {% else %}
+                <a href="{% url 'create_profile' %}">Create New Profile</a>
+                <button style= "position: absolute; right: 5px; top: 2.5px; font-size: larger; color:#FF1493;"><a href="{% url 'login' %}">Login</a></button>
+                {% endif %}
+                <hr>
+                {% if request.user.is_authenticated %}
+                Logged in as: {{request.user}}
+                {% else %}
+                Not logged in.
+                {% endif %}
+           </nav>
+           <h1>My Kitchen</h1>
+       </head>
+
+       {% block content %}
+       {% endblock %}
+   </body>
+</html>

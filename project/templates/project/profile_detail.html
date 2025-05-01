@@ -1,0 +1,25 @@
+<!-- project/profile_detail.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: display the detail page for a profile -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>{{profile.first_name}} {{profile.last_name}}'s Profile</h2>
+<div>
+    <h3>Recipes Created</h3>
+    {% if recipes %}
+    <ul>
+        {% for recipe in recipes %}
+            <li>
+                <a href="{% url 'recipe_detail' recipe.pk %}"><strong>{{ recipe.recipe_name }}</strong></a>
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No recipes created yet.</p>
+{% endif %}
+</div>
+{% endblock %}

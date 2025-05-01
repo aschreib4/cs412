@@ -1,0 +1,17 @@
+<!-- project/recipe_list.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: listing of all the recipes that are on the app -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>The Recipes</h2>
+<div>
+    {% for recipe in recipes %}
+    <div>
+        <a href="{% url 'recipe_detail' recipe.pk %}"><strong>{{ recipe.recipe_name }}</strong></a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

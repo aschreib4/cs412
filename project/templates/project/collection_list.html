@@ -1,0 +1,21 @@
+<!-- project/collection_list.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: listing of all the recipe collections that are on the app -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>The Recipe Collections</h2>
+<div>
+    {% for collection in collections %}
+    <div>
+        <a href="{% url 'collection_detail' collection.pk %}"><strong>{{ collection.collection_name }}</strong></a>
+    </div>
+    {% endfor %}
+</div>
+<h2>Create a New Collection</h2>
+<div>
+    <button><a href="{% url 'collection_create' %}">Create Collection</a></button>
+</div>
+{% endblock %}

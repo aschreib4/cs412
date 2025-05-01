@@ -1,0 +1,25 @@
+<!-- project/collection_detail.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: display the detail page for a recipe collection -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>{{ collection.collection_name }}</h2>
+<h3>Collected by: {{ collection.collected_by.first_name }} {{ collection.collected_by.last_name }}</h3>
+<div>
+    <h3>Recipes Included</h3>
+    {% if recipe_links %}
+    <ul>
+        {% for link in recipe_links %}
+            <li>
+                <a href="{% url 'recipe_detail' link.recipe.pk %}">{{ link.recipe.recipe_name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}  
+        <p>No recipes included yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

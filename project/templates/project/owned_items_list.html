@@ -1,0 +1,23 @@
+<!-- project/owned_items_list.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: display all of the items that a logged in user owns -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Your Owned Items:</h2>
+{% if owned_items %}
+    {% for item in owned_items %}
+        <p>
+            You have {{item.quantity}} {{item.units}} of {{item.item_name}}.
+            <br>
+            This expires on {{item.expiration_date}}.
+        </p>
+    {% endfor %}
+{% else %}
+    <p>You do not own any items.</p>
+{% endif %}
+
+{% endblock %}

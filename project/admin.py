@@ -6,8 +6,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Profile, OwnedItem, Recipe, Ingredient, RecipeCollection, RecipeCollectionRecipe
-admin.site.register(Profile)
+from .models import ProjectProfile, OwnedItem, Recipe, Ingredient, RecipeCollection, RecipeCollectionRecipe
+admin.site.register(ProjectProfile)
 admin.site.register(OwnedItem)
 admin.site.register(Recipe)
 admin.site.register(Ingredient)

@@ -1,0 +1,28 @@
+<!-- project/create_profile_form.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: creating a profile/user for the Project application -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<form action="{% url 'create_profile' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ user_creation_form.as_table }}
+    </table>
+    <br>
+    <table>
+        {{form.as_table}}
+    </table>
+    <br>
+    <center>
+        <button type="submit">Create Profile</button>
+    </center>
+
+    <input type="hidden" name="next" value="{% url 'homepage' %}">
+
+</form>
+
+{% endblock %}

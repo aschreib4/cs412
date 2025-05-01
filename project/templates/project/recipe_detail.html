@@ -1,0 +1,14 @@
+<!-- project/recipe_detail.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: display the detail page for a recipe -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>{{ recipe.recipe_name }}</h2>
+<p>{{ recipe.description }}</p>
+<p><strong>Created by:</strong> 
+   {{ recipe.created_by.first_name }} {{ recipe.created_by.last_name }}
+</p>
+{% endblock %}

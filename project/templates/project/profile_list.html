@@ -1,0 +1,18 @@
+<!-- project/profile_list.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: listing of all the profiles that are on the app -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h2>The Profiles</h2>
+<div>
+    {% for projectprofile in projectprofiles %}
+    <div>
+        <h3>{{ projectprofile.first_name }} {{ projectprofile.last_name }}</h3>
+        <a href="{% url 'profile_detail' projectprofile.id %}">View Profile</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

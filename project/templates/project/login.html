@@ -1,0 +1,22 @@
+<!-- project/login.html -->
+<!-- Made by Annelise Schreiber, aschreib@bu.edu-->
+<!-- Thursday, May 1, 2025 -->
+<!-- Description: log in page for users -->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h2>Login to Mini Facebook</h2>
+<form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Login">
+    {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{request.GET.next}}">
+    {% else %}
+    <input type="hidden" name="next" value="{% url 'homepage' %}">
+    {% endif %}
+</form>
+
+{% endblock %}
